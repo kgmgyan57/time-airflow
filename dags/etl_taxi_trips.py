@@ -23,19 +23,10 @@ with DAG(
     dag_id='gcs_to_bigquery_parquet_load',
     default_args=default_args,
     description='Load Parquet files from GCS to BigQuery with monthly partitioning',
-    schedule_interval=None,
+    schedule_interval="0 22 * * *",
     catchup=False,
     tags=['raw_taxi_trips', 'etl'],
 ) as dag:
-
-    check_gcs_files_exist = GCSObjectsWithPrefixExistenceSensor(
-        task_id='check_gcs_files_exist',
-        bucket=gcs_bucket_name,
-        prefix=gcs_uri_prefix,
-        gcp_conn_id='google_cloud_default',
-        timeout=300,
-        poke_interval=60,
-    )
 
     load_parquet_to_bigquery = GCSToBigQueryOperator(
         task_id='load_parquet_to_bigquery',
@@ -52,4 +43,4 @@ with DAG(
         gcp_conn_id='google_cloud_default',
     )
 
-    check_gcs_files_exist >> load_parquet_to_bigquery
+    load_parquet_to_bigquery

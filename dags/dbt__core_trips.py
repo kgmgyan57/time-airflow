@@ -12,9 +12,7 @@ from airflow.providers.google.cloud.operators.kubernetes_engine import (
 from airflow.utils.trigger_rule import TriggerRule
 from kubernetes.client.models import V1Volume, V1VolumeMount
 
-
-
-dag_id = "dbt_celebi__fact_trips"
+dag_id = "dbt_celebi__core_trips"
 
 
 default_args = {
@@ -49,7 +47,7 @@ pod_args = {
 with DAG(
     dag_id=dag_id,
     default_args=default_args,
-    schedule_interval="0 23 * * *",
+    schedule_interval=None,
     catchup=False,
     params={"fullrefresh": ""},
 ) as dag:
@@ -58,23 +56,17 @@ with DAG(
 
     end_dag = EmptyOperator(task_id="end_dag")
 
-    run_fact_trips = GKEStartPodOperator(
+    run_core_trips = GKEStartPodOperator(
         **pod_args,
         task_id="fact_trips_pipeline",
         execution_timeout=timedelta(minutes=60),
         arguments=[
-            "dbt build {{params.fullrefresh or ''}} --select +fact_taxi_trips exclude stg__taxi_trips_archive --target bronze_prod;"
+            "dbt build {{params.fullrefresh or ''}} --select +tag:core --exclude +fact_taxi_trips +dim_dates --target bronze_prod;"
         ],
-    )
-    
-    trigger_core_trips = TriggerDagRunOperator(
-        task_id="trigger_core_trips",
-        trigger_dag_id="dbt_optimus_prime__core_trips",
     )
 
     (
         start_dag
-        >> run_fact_trips
-        >> trigger_core_trips
+        >> run_core_trips
         >> end_dag
     )

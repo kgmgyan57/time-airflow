@@ -1,0 +1,18 @@
+steps:
+- name: gcr.io/cloud-builders/gsutil
+  args:
+    - '-m'
+    - 'rsync'
+    - '-r'
+    - 'dags'
+    - 'gs://us-central1-dottime-airflow-92b2d20a-bucket/dags'
+- name: gcr.io/cloud-builders/gsutil
+  args:
+    - '-m'
+    - 'rsync'
+    - '-d'
+    - '-r'
+    - 'plugins'
+    - 'gs://us-central1-dottime-airflow-92b2d20a-bucket/plugins'
+options:
+  logging: CLOUD_LOGGING_ONLY

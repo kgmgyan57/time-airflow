@@ -69,7 +69,7 @@ with DAG(
     
     trigger_core_trips = TriggerDagRunOperator(
         task_id="trigger_core_trips",
-        trigger_dag_id="dbt_optimus_prime__core_trips",
+        trigger_dag_id="dbt_celebi__core_trips",
     )
 
     (

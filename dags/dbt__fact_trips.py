@@ -37,7 +37,7 @@ pod_args = {
     "on_finish_action": "delete_succeeded_pod",
     "log_events_on_failure": True,
     "trigger_rule": TriggerRule.ALL_SUCCESS,
-    "volumes": [V1Volume(name="config-files", config_map={"name": "dbt-profiles.yml"})],
+    "volumes": [V1Volume(name="config-files", config_map={"name": "dbt-configmap"})],
     "volume_mounts": [
         V1VolumeMount(name="config-files", mount_path="/root/.dbt", read_only=True)
     ],

@@ -38,7 +38,7 @@ with DAG(
         autodetect=True,
         time_partitioning={
             "type": "MONTH",
-            "field": "time_start_timestamp"
+            "field": "trip_start_timestamp"
         },
         gcp_conn_id='google_cloud_default',
     )

@@ -22,7 +22,6 @@ default_args = {
 with DAG(
     dag_id='gcs_to_bigquery_parquet_load',
     default_args=default_args,
-    description='Load Parquet files from GCS to BigQuery with monthly partitioning',
     schedule_interval="0 22 * * *",
     catchup=False,
     tags=['raw_taxi_trips', 'etl'],
